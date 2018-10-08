@@ -4,11 +4,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -39,14 +41,27 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Events extends AppCompatActivity implements OnMapReadyCallback {
     Button transport;
+
+    TextView length, distance;
 
     private static final String TAG = Events.class.getSimpleName();
     private GoogleMap mMap;
@@ -81,7 +96,8 @@ public class Events extends AppCompatActivity implements OnMapReadyCallback {
     private String[] mLikelyPlaceAttributions;
     private LatLng[] mLikelyPlaceLatLngs;
 
-    private List<Marker> event_locations;
+    private List<Location> event_locations;
+    private List<Marker> event_markers;
 
     private LocationListener mLocationListener = new LocationListener() {
         @Override
@@ -139,11 +155,13 @@ public class Events extends AppCompatActivity implements OnMapReadyCallback {
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         mLocationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        event_locations = new ArrayList<Marker>();
-        event_addresses = new ArrayList<Address>();
-        event_strings = new ArrayList<String>();
+        event_locations = new ArrayList<>();
+        event_markers = new ArrayList<>();
+        event_addresses = new ArrayList<>();
+        event_strings = new ArrayList<>();
 
-
+        length = (TextView)findViewById(R.id.length);
+        distance = (TextView)findViewById(R.id.distance);
         // Build the map.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapView);
@@ -253,7 +271,11 @@ public class Events extends AppCompatActivity implements OnMapReadyCallback {
                             }
                             if(location!=null){
                                 //Toast.makeText(getApplicationContext(), "location not null, draw marker", Toast.LENGTH_LONG).show();
+                                event_locations.add(location);
                                 drawMarker(location,"Current Location");
+                                getEvent_Locations();
+                                //Toast.makeText(getApplicationContext(), "SIZE"+event_locations.size(), Toast.LENGTH_LONG).show();
+
                             }
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
@@ -270,6 +292,16 @@ public class Events extends AppCompatActivity implements OnMapReadyCallback {
             Log.e("Exception: %s", e.getMessage());
         }
 
+
+
+        //Toast.makeText(getApplicationContext(), "what"+event_locations.get(0).getPosition().latitude+" "+event_locations.get(0).getPosition().longitude, Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(), "SIZE"+event_locations.size(), Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(), event_locations.get(1).getPosition().latitude+" "+event_locations.get(1).getPosition().longitude, Toast.LENGTH_LONG).show();
+
+
+    }
+
+    private void getEvent_Locations(){
         TextView places = findViewById(R.id.address);
         String place = (String) places.getText();
 
@@ -282,14 +314,15 @@ public class Events extends AppCompatActivity implements OnMapReadyCallback {
             Location loca = new Location("");
             loca.setLatitude(event_addresses.get(i).getLatitude());
             loca.setLongitude(event_addresses.get(i).getLongitude());
+            event_locations.add(loca);
             drawMarker(loca,event_strings.get(i));
         }
 
-        //Toast.makeText(getApplicationContext(), "what"+event_locations.get(0).getPosition().latitude+" "+event_locations.get(0).getPosition().longitude, Toast.LENGTH_LONG).show();
-        //Toast.makeText(getApplicationContext(), "SIZE"+event_locations.size(), Toast.LENGTH_LONG).show();
-        //Toast.makeText(getApplicationContext(), event_locations.get(1).getPosition().latitude+" "+event_locations.get(1).getPosition().longitude, Toast.LENGTH_LONG).show();
-
-
+        if(event_locations.size() >=2){
+            String url = getRequestUrl(event_locations.get(0), event_locations.get(1));
+            TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
+            taskRequestDirections.execute(url);
+        }
     }
 
     private void drawMarker(Location location, String title){
@@ -297,13 +330,13 @@ public class Events extends AppCompatActivity implements OnMapReadyCallback {
         //    mMap.clear();
             LatLng gps = new LatLng(location.getLatitude(), location.getLongitude());
             Marker loc = mMap.addMarker(new MarkerOptions().position(gps).title(title));
-            event_locations.add(loc);
+            event_markers.add(loc);
             //builder.include(loc.getPosition());
 
         //Toast.makeText(getApplicationContext(), event_locations.size()+"new marker added at "+location.getLatitude()+" "+location.getLongitude(), Toast.LENGTH_LONG).show();
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-        for (Marker marker : event_locations) {
+        for (Marker marker : event_markers) {
             builder.include(marker.getPosition());
         }
         LatLngBounds bounds = builder.build();
@@ -358,6 +391,8 @@ public class Events extends AppCompatActivity implements OnMapReadyCallback {
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
     }
+
+
 
     /**
      * Handles the result of the request for location permissions.
@@ -510,6 +545,136 @@ public class Events extends AppCompatActivity implements OnMapReadyCallback {
             }
         } catch (SecurityException e) {
             Log.e("Exception: %s", e.getMessage());
+        }
+    }
+
+    private String getRequestUrl(Location origin, Location dest) {
+        //Value of origin
+        String str_org = "origin=" + origin.getLatitude() +","+origin.getLongitude();
+        //Value of destination
+        String str_dest = "destination=" + dest.getLatitude()+","+dest.getLongitude();
+        //Set value enable the sensor
+        String sensor = "sensor=false";
+        //Mode for find direction
+        String mode = "mode=driving";
+        //Build the full param
+        String param = str_org +"&" + str_dest + "&" +sensor+"&" +mode+"&key=AIzaSyDiwngGmaormOj3PZr4K43hpYDR6xulZqA";
+        //Output format
+        String output = "json";
+        //Create url to request
+        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + param;
+        return url;
+    }
+
+    private String requestDirection(String reqUrl) throws IOException {
+        String responseString = "";
+        InputStream inputStream = null;
+        HttpURLConnection httpURLConnection = null;
+        try{
+            URL url = new URL(reqUrl);
+            httpURLConnection = (HttpURLConnection) url.openConnection();
+            httpURLConnection.connect();
+
+            //Get the response result
+            inputStream = httpURLConnection.getInputStream();
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+            StringBuffer stringBuffer = new StringBuffer();
+            String line = "";
+            while ((line = bufferedReader.readLine()) != null) {
+                stringBuffer.append(line);
+            }
+
+            responseString = stringBuffer.toString();
+            bufferedReader.close();
+            inputStreamReader.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+            httpURLConnection.disconnect();
+        }
+        return responseString;
+    }
+
+    public class TaskRequestDirections extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String responseString = "";
+            try {
+                responseString = requestDirection(strings[0]);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return  responseString;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            //Parse json here
+            TaskParser taskParser = new TaskParser();
+            taskParser.execute(s);
+        }
+    }
+
+    public class TaskParser extends AsyncTask<String, Void, List<List<HashMap<String, String>>> > {
+
+        @Override
+        protected List<List<HashMap<String, String>>> doInBackground(String... strings) {
+            JSONObject jsonObject = null;
+            List<List<HashMap<String, String>>> routes = null;
+            try {
+                jsonObject = new JSONObject(strings[0]);
+                DirectionParser directionsParser = new DirectionParser();
+                routes = directionsParser.parse(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return routes;
+        }
+
+        @Override
+        protected void onPostExecute(List<List<HashMap<String, String>>> lists) {
+            //Get list route and display it into the map
+
+            ArrayList points = null;
+
+            PolylineOptions polylineOptions = null;
+
+            for (List<HashMap<String, String>> path : lists) {
+                points = new ArrayList();
+                polylineOptions = new PolylineOptions();
+
+                for (HashMap<String, String> point : path) {
+                    double lat = Double.parseDouble(point.get("lat"));
+                    double lon = Double.parseDouble(point.get("lon"));
+                    String dist = point.get("dist");
+                    String duration = point.get("duration");
+
+                    length.setText(duration);
+                    distance.setText(dist);
+
+                    points.add(new LatLng(lat,lon));
+                }
+
+                polylineOptions.addAll(points);
+                polylineOptions.width(15);
+                polylineOptions.color(Color.BLUE);
+                polylineOptions.geodesic(true);
+            }
+
+            if (polylineOptions!=null) {
+                mMap.addPolyline(polylineOptions);
+            } else {
+                Toast.makeText(getApplicationContext(), "Direction not found!", Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
 }

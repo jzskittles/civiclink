@@ -100,7 +100,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="0dp"
                 android:layout_marginTop="1dp"
-                android:text="3 Ames Street Cambridge, MA 02142"
+                android:text="525 S Winchester Blvd, San Jose, CA 95128"
                 android:textSize="16sp" />
 
             <Button
