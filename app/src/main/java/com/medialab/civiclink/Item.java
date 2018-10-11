@@ -1,32 +1,86 @@
 package com.medialab.civiclink;
 
-import android.graphics.drawable.Drawable;
+import android.support.v4.app.FragmentActivity;
 
-/**
- * Created by jenny on 12/23/2017.
- */
+public class Item extends FragmentActivity  {
+    private String name, date, time, length, details, distance, origin, dest, address;
 
-public class Item{
-    CharSequence label; //package name
-    CharSequence name; //app name
-    Drawable icon; //app icon
-    int position;
 
-    public Item(){
-
+    public Item() {
     }
 
-    //gets app characteristics
+    public Item(String name, String date, String time, String length, String details, String distance, String origin, String address) {
+        this.name = name;
+        this.date = date;
+        this.time = time;
+        this.length = length;
+        this.details = details;
+        this.distance = distance;
+        this.origin = origin;
+        this.address = address;
+    }
+
     public String getName(){
-        return name.toString();
+        return name;
     }
 
-    public void setName(String appName){
-        name = appName;
+    public void setName(String name){
+        this.name = name;
     }
 
-    public Drawable getIcon(){return icon;}
+    public String getDate() {
+        return date;
+    }
 
-    public void setIcon(Drawable appIcon){icon = appIcon;}
+    public void setDate(String date) {
+        this.date = date;
+    }
 
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getLength() {
+        return length;
+    }
+
+    public void setLength(String length) {
+        this.length = length;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
+
+    public String getDistance() {
+        return distance;
+    }
+
+    public void setDistance(String distance) {
+        this.distance = distance;
+    }
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(String origin) {
+        this.origin = origin;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 }

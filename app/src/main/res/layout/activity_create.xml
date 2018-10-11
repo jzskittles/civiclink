@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:text="New Event"
+        android:textSize="28sp" />
+
+    <EditText
+        android:id="@+id/createname"
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:hint="Event Name"
+        android:inputType="textCapWords"
+        android:textColor="@android:color/black"/>
+
+    <EditText
+        android:id="@+id/createdate"
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="102dp"
+        android:ems="10"
+        android:hint="Date"
+        android:inputType="date" />
+
+    <EditText
+        android:id="@+id/createtime"
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/createdate"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:hint="Time"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/createdetails"
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/createtime"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:hint="Event Details"
+        android:inputType="textMultiLine" />
+
+    <EditText
+        android:id="@+id/createaddress"
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/createdetails"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:hint="Address"
+        android:inputType="textPostalAddress" />
+
+    <Button
+        android:id="@+id/make_event"
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/createaddress"
+        android:layout_alignStart="@+id/createname"
+        android:text="SUBMIT" />
+
+
+</RelativeLayout>

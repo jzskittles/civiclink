@@ -65,6 +65,8 @@ public class Login extends AppCompatActivity {
         transportation = (Spinner)findViewById(R.id.transportation);
         car = (Spinner)findViewById(R.id.car_type);
 
+        session = new SessionManagement(getApplication());
+
         final String[] textArray = {"Car", "Bike", "Walk", "Need a ride"};
         //Integer[] imageArray = { R.drawable.clouds, R.drawable.mark, R.drawable.techcrunch, R.drawable.times };
 
@@ -181,7 +183,8 @@ public class Login extends AppCompatActivity {
                                 String driving = "";
                                 if(jsonObject.getString("driving")!=null)
                                     jsonObject.getString("driving");
-
+                                session.createLoginSession(name.getText().toString(), phone, email, password.getText().toString(), street, transportation, cartype, numseats, driving);
+                                Toast.makeText(getApplicationContext(), email_login.getText().toString(), Toast.LENGTH_LONG).show();
                                 startActivity(new Intent(getApplicationContext(),Events.class));
                             }else{
                                 Toast.makeText(getApplicationContext(),"ERROR: "+jsonObject.getString("error"),Toast.LENGTH_SHORT).show();

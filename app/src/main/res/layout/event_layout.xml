@@ -12,22 +12,33 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/date"
-            android:layout_width="100dp"
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Title"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="118dp"
+            android:layout_marginTop="3dp"
             android:text="Date"
-            android:textSize="24sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/time"
-            android:layout_width="60dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="169dp"
-            android:layout_marginTop="5dp"
             android:layout_centerVertical="true"
+            android:layout_marginStart="228dp"
+            android:layout_marginTop="5dp"
             android:text="Time"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/length"
@@ -37,8 +48,10 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
 
-            android:text="length"
-            android:textSize="20sp" />
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="1dp"
+            android:text="Length"
+            android:textSize="16sp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -64,28 +77,36 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:text="Distance"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/mapss"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/event_detail"
         android:orientation="horizontal">
 
+        <!--<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/mapView"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="345dp"
+            android:layout_height="190dp"
+            tools:context="com.medialab.civiclink.Events"/>-->
+
         <com.google.android.gms.maps.MapView
             android:id="@+id/mapView"
-            android:layout_width="335dp"
-            android:layout_height="190dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true" />
+            android:layout_width="345dp"
+            android:layout_height="190dp" />
+
 
         <TextView
             android:id="@+id/address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/mapView"
             android:layout_alignParentStart="true"
+            android:layout_below="@+id/mapView"
             android:layout_marginStart="0dp"
             android:layout_marginTop="1dp"
             android:text="Event address"

@@ -29,7 +29,12 @@ public class Transportation extends AppCompatActivity {
 
         need = (TextView)findViewById(R.id.need);
         numneed = (EditText)findViewById(R.id.numneed);
-
+        yescar.setChecked(true);
+        fit.setVisibility(View.VISIBLE);
+        numfit.setVisibility(View.VISIBLE);
+        need.setVisibility(View.INVISIBLE);
+        numneed.setVisibility(View.INVISIBLE);
+        nocar.setChecked(false);
 
         yescar.setOnClickListener(new View.OnClickListener() {
             @Override

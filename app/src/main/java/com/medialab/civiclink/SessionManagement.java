@@ -21,11 +21,16 @@ public class SessionManagement {
     private static final String IS_LOGIN = "isLoggedIn";
 
     // User name (make variable public to access from outside)
-    public static final String KEY_USERNAME = "username";
-    public static final String KEY_EMAIL = "email";
     public static final String KEY_NAME = "name";
-    public static final String KEY_YEAR = "year";
-    public static final String KEY_HOURS = "hour";
+    public static final String KEY_PHONE = "phone";
+    public static final String KEY_EMAIL = "email";
+    public static final String KEY_PASSWORD = "password";
+    public static final String KEY_STREET = "street";
+    public static final String KEY_TRANSPORTATION = "transportation";
+    public static final String KEY_CARTYPE = "cartype";
+    public static final String KEY_NUMSEATS = "numseats";
+
+    public static final String KEY_DRIVING = "driving";
 
     // Constructor
     public SessionManagement (Context context) {
@@ -34,29 +39,32 @@ public class SessionManagement {
         editor = pref.edit();
     }
 
-    public void createLoginSession(String username, String name, String email, int year, int hours) {
+    public void createLoginSession(String name, int phone, String email, String password, String street, String transportation, String cartype, int numseats, String driving) {
         editor.putBoolean(IS_LOGIN, true);
-        editor.putString(KEY_USERNAME, username);
         editor.putString(KEY_NAME, name);
+        editor.putString(KEY_PHONE, String.valueOf(phone));
         editor.putString(KEY_EMAIL, email);
-        editor.putString(KEY_YEAR, String.valueOf(year));
-        editor.putString(KEY_HOURS, String.valueOf(hours));
+        editor.putString(KEY_PASSWORD, password);
+        editor.putString(KEY_STREET, street);
+        editor.putString(KEY_TRANSPORTATION, transportation);
+        editor.putString(KEY_CARTYPE, cartype);
+        editor.putString(KEY_NUMSEATS, String.valueOf(numseats));
+        editor.putString(KEY_DRIVING, driving);
         editor.commit();
     }
 
     public HashMap<String, String> getUserDetails() {
         HashMap<String, String> user = new HashMap<String, String>();
-        user.put(KEY_USERNAME, pref.getString(KEY_USERNAME, "null"));
         user.put(KEY_NAME, pref.getString(KEY_NAME, "null"));
+        user.put(KEY_PHONE, pref.getString(KEY_PHONE, "null"));
         user.put(KEY_EMAIL, pref.getString(KEY_EMAIL, "null"));
-        user.put(KEY_YEAR, pref.getString(KEY_YEAR, "null"));
-        user.put(KEY_HOURS, pref.getString(KEY_HOURS, "null"));
+        user.put(KEY_PASSWORD, pref.getString(KEY_PASSWORD, "null"));
+        user.put(KEY_STREET, pref.getString(KEY_STREET, "null"));
+        user.put(KEY_TRANSPORTATION, pref.getString(KEY_TRANSPORTATION, "null"));
+        user.put(KEY_CARTYPE, pref.getString(KEY_CARTYPE, "null"));
+        user.put(KEY_NUMSEATS, pref.getString(KEY_NUMSEATS, "null"));
+        user.put(KEY_DRIVING, pref.getString(KEY_DRIVING, "null"));
         return user;
-    }
-
-    public void updateHours(String hours) {
-        editor.putString(KEY_HOURS, hours);
-        editor.commit();
     }
 
     public void checkLogin() {
