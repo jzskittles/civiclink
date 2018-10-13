@@ -3,13 +3,13 @@ package com.medialab.civiclink;
 import android.support.v4.app.FragmentActivity;
 
 public class Item extends FragmentActivity  {
-    private String name, date, time, length, details, distance, origin, dest, address;
+    private String name, date, time, length, details, distance, origin, address, uid;
 
 
     public Item() {
     }
 
-    public Item(String name, String date, String time, String length, String details, String distance, String origin, String address) {
+    public Item(String name, String date, String time, String length, String details, String distance, String origin, String address, String uid) {
         this.name = name;
         this.date = date;
         this.time = time;
@@ -18,6 +18,7 @@ public class Item extends FragmentActivity  {
         this.distance = distance;
         this.origin = origin;
         this.address = address;
+        this.uid = uid;
     }
 
     public String getName(){
@@ -82,5 +83,13 @@ public class Item extends FragmentActivity  {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 }

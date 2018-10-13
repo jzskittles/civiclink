@@ -163,12 +163,6 @@ public class Events extends AppCompatActivity{// implements OnMapReadyCallback {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Retrieve location and camera position from saved instance state.
-        /*if (savedInstanceState != null) {
-            mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
-            mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
-        }*/
-
         // Retrieve the content view that renders the map.
         setContentView(R.layout.activity_events);
 
@@ -181,35 +175,13 @@ public class Events extends AppCompatActivity{// implements OnMapReadyCallback {
 
         requestQueue.start();
 
-        // Construct a GeoDataClient.
-        /*mGeoDataClient = Places.getGeoDataClient(this, null);
-
-        // Construct a PlaceDetectionClient.
-        mPlaceDetectionClient = Places.getPlaceDetectionClient(this, null);
-
-        // Construct a FusedLocationProviderClient.
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
-        mLocationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        event_locations = new ArrayList<>();
-        event_markers = new ArrayList<>();
-        event_addresses = new ArrayList<>();
-        event_strings = new ArrayList<>();
-
-        length = (TextView)findViewById(R.id.length);
-        distance = (TextView)findViewById(R.id.distance);
-        // Build the map.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.mapView);
-        mapFragment.getMapAsync(this);*/
-
         listView = (ListView) findViewById(R.id.list);
 
         feedItems = new ArrayList<Item>();
 
         getFeed();
         Log.e(TAG, "number of items after getFeed"+feedItems.size());
-        listAdapter = new FeedListAdapter(this, feedItems);
+        listAdapter = new FeedListAdapter(getApplicationContext(), this, feedItems);
         listView.setAdapter(listAdapter);
 
         new_event = (Button)findViewById(R.id.new_event);
@@ -221,9 +193,6 @@ public class Events extends AppCompatActivity{// implements OnMapReadyCallback {
                 listAdapter.notifyDataSetChanged();
             }
         });
-
-        //listView.setAdapter(listAdapter);
-
     }
 
 
@@ -280,16 +249,13 @@ public class Events extends AppCompatActivity{// implements OnMapReadyCallback {
                 item.setTime(feedObj.getString("time"));
                 item.setDetails(feedObj.getString("details"));
                 item.setAddress(feedObj.getString("address"));
+                item.setUid(feedObj.getString("uid"));
 
-                //if(feedItems.isEmpty())
-                    //getDeviceLocation(feedObj.getString("address"), 0);
-                //else
                 Log.e(TAG, i+"");
-                Log.e(TAG,item.getName()+","+item.getDate()+","+item.getTime()+","+item.getDetails()+","+item.getAddress());
+                Log.e(TAG,item.getName()+","+item.getDate()+","+item.getTime()+","+item.getDetails()+","+item.getAddress()+","+item.getUid());
 
 
                 feedItems.add(item);
-                //Toast.makeText(getApplicationContext(), item.getAddress()+"",Toast.LENGTH_LONG).show();
 
                 // notify data changes to list adapter
                 listAdapter.notifyDataSetChanged();

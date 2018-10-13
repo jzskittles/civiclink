@@ -166,6 +166,7 @@ public class Login extends AppCompatActivity {
                             JSONObject jsonObject = new JSONObject(response);
                             if(jsonObject.has("success")){
                                 Toast.makeText(getApplicationContext(), "SUCCESS: " + jsonObject.getString("success"), Toast.LENGTH_SHORT).show();
+                                String name = jsonObject.getString("name");
                                 int phone = 0;
                                 if(jsonObject.getString("phone")!=null)
                                     phone = Integer.parseInt(jsonObject.getString("phone"));
@@ -183,7 +184,7 @@ public class Login extends AppCompatActivity {
                                 String driving = "";
                                 if(jsonObject.getString("driving")!=null)
                                     jsonObject.getString("driving");
-                                session.createLoginSession(name.getText().toString(), phone, email, password.getText().toString(), street, transportation, cartype, numseats, driving);
+                                session.createLoginSession(name, phone, email, password.getText().toString(), street, transportation, cartype, numseats, driving);
                                 Toast.makeText(getApplicationContext(), email_login.getText().toString(), Toast.LENGTH_LONG).show();
                                 startActivity(new Intent(getApplicationContext(),Events.class));
                             }else{

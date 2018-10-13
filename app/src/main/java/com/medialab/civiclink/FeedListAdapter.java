@@ -148,8 +148,10 @@ public class FeedListAdapter extends BaseAdapter{//} implements OnMapReadyCallba
     List<GoogleMap> gMaps = new ArrayList<>();
 
     List<View> views = new ArrayList<>();
+    String uid = "";
 
-    public FeedListAdapter(Activity activity, List feedItems) {
+    public FeedListAdapter(Context context, Activity activity, List feedItems) {
+        this.mContext = context;
         this.activity = activity;
         this.feedItems = feedItems;
     }
@@ -192,18 +194,7 @@ public class FeedListAdapter extends BaseAdapter{//} implements OnMapReadyCallba
 
                 //RelativeLayout rl3 = convertView.findViewById(R.id.mapss);
                 address = (TextView) convertView.findViewById(R.id.address);
-                Button transport = (Button)convertView.findViewById(R.id.transport);
 
-                /*transport.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View arg0) {
-                        // Get the position
-                        Intent intent = new Intent(mContext, Transportation.class);
-                        mContext.startActivity(intent);
-
-                    }
-                });*/
                 name.setText(item.getName());
                 date.setText(item.getDate());
                 time.setText(item.getTime());
@@ -211,18 +202,9 @@ public class FeedListAdapter extends BaseAdapter{//} implements OnMapReadyCallba
                 address.setText(item.getAddress());
                 length.setText(item.getLength());
                 distance.setText(item.getDistance());
+                uid = item.getUid();
 
                 final String mapdest = item.getAddress();
-
-                //if (imageLoader == null)
-                //    imageLoader = AppController.getInstance().getImageLoader();
-
-
-                // Retrieve location and camera position from saved instance state.
-                /*if (savedInstanceState != null) {
-                    mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
-                    mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
-                }*/
 
                 // Construct a GeoDataClient.
                 mGeoDataClient = Places.getGeoDataClient(activity, null);
@@ -237,10 +219,25 @@ public class FeedListAdapter extends BaseAdapter{//} implements OnMapReadyCallba
                 event_locations = new ArrayList<>();
                 event_markers = new ArrayList<>();
 
+                final Button transport = (Button)convertView.findViewById(R.id.transport);
+                transport.setTag(position);
+
+                transport.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View arg0) {
+                        // Get the position
+                        Intent intent = new Intent(mContext, Transportation.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("eventID", feedItems.get((Integer)transport.getTag()).getUid());
+                        bundle.putString("eventAddress", feedItems.get((Integer)transport.getTag()).getAddress());
+                        intent.putExtras(bundle);
+                        mContext.startActivity(intent);
+
+                    }
+                });
+
                 // Build the map.
-                /*SupportMapFragment mapFragment = (SupportMapFragment) ((FragmentActivity)activity).getSupportFragmentManager()
-                        .findFragmentById(R.id.mapView);
-                mapFragment.getMapAsync(this);*/
                 mapView = (MapView)convertView.findViewById(R.id.mapView);
                 mapView.onCreate(null);
                 mapView.getMapAsync(new OnMapReadyCallback() {
@@ -299,65 +296,6 @@ public class FeedListAdapter extends BaseAdapter{//} implements OnMapReadyCallba
 
     }
 
-    /*@Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (mapView; != null) {
-            mapView.onSaveInstanceState(outState);
-        }
-    }*/
-
-
-    /**
-     * Manipulates the map when it's available.
-     * This callback is triggered when the map is ready to be used.
-     */
-    /*@Override
-    public void onMapReady(GoogleMap map) {
-        mMap = map;
-
-        //event_locations.clear();
-
-        // Use a custom info window adapter to handle multiple lines of text in the
-        // info window contents.
-        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-
-            @Override
-            // Return null here, so that getInfoContents() is called next.
-            public View getInfoWindow(Marker arg0) {
-                return null;
-            }
-
-            @Override
-            public View getInfoContents(Marker marker) {
-                // Inflate the layouts for the info window, title and snippet.
-                View infoWindow = activity.getLayoutInflater().inflate(R.layout.custom_info_contents,
-                        (FrameLayout) activity.findViewById(R.id.mapView), false);
-
-                TextView title = ((TextView) infoWindow.findViewById(R.id.title));
-                title.setText(marker.getTitle());
-
-                TextView snippet = ((TextView) infoWindow.findViewById(R.id.snippet));
-                snippet.setText(marker.getSnippet());
-
-                return infoWindow;
-            }
-        });
-
-        // Prompt the user for permission.
-        getLocationPermission();
-
-        // Turn on the My Location layer and the related control on the map.
-        updateLocationUI();
-
-        // Get the current location of the device and set the position of the map.
-        getDeviceLocation();
-
-
-        //mMap.moveCamera(cu);
-        //Toast.makeText(getApplicationContext(), "animate camera called", Toast.LENGTH_LONG).show();
-    }*/
-
     /**
      * Gets the current location of the device, and positions the map's camera.
      */
@@ -400,13 +338,8 @@ public class FeedListAdapter extends BaseAdapter{//} implements OnMapReadyCallba
                             }
                             if(location!=null){
                                 //Toast.makeText(getApplicationContext(), "location not null, draw marker", Toast.LENGTH_LONG).show();
-                                //event_locations.add(location);
-                                //Log.e(TAG, ""+event_locations.size());
                                 getEvent_Locations(location, destination, position);
                                 drawMarker(location,"Current Location", position);
-                                //Log.d(TAG, "getEvent_Locations called "+destination);
-                                //Toast.makeText(getApplicationContext(), "SIZE"+event_locations.size(), Toast.LENGTH_LONG).show();
-
                             }
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
@@ -438,7 +371,6 @@ public class FeedListAdapter extends BaseAdapter{//} implements OnMapReadyCallba
         drawMarker(loca, place, position);
 
 
-        //if(event_locations.size()%2==0){
         String url = getRequestUrl(location, loca);
         Wrapper w = new Wrapper();
         w.position = position;
@@ -446,20 +378,13 @@ public class FeedListAdapter extends BaseAdapter{//} implements OnMapReadyCallba
 
         TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
         taskRequestDirections.execute(w);
-            //event_locations.clear();
-        //}
     }
 
     private void drawMarker(Location location, String title, int position){
-        //if(mMap != null){
-        //    mMap.clear();
-        //Log.d(TAG, "draw marker called");
         LatLng gps = new LatLng(location.getLatitude(), location.getLongitude());
         Marker loc = gMaps.get(position).addMarker(new MarkerOptions().position(gps).title(title));
         event_markers.add(loc);
-        //builder.include(loc.getPosition());
 
-        //Toast.makeText(getApplicationContext(), event_locations.size()+"new marker added at "+location.getLatitude()+" "+location.getLongitude(), Toast.LENGTH_LONG).show();
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
         for (Marker marker : event_markers) {
@@ -472,8 +397,6 @@ public class FeedListAdapter extends BaseAdapter{//} implements OnMapReadyCallba
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
 
         gMaps.get(position).animateCamera(cu);
-        //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(gps, 12));
-        //}
     }
 
     private Address getEventLocations(String eventAddress){
@@ -669,7 +592,6 @@ public class FeedListAdapter extends BaseAdapter{//} implements OnMapReadyCallba
         String str_org = "origin=" + origin.getLatitude() +","+origin.getLongitude();
         //Value of destination
         String str_dest = "destination=" + dest.getLatitude()+","+dest.getLongitude();
-        Log.e(TAG,str_dest);
         //Set value enable the sensor
         String sensor = "sensor=false";
         //Mode for find direction
@@ -716,12 +638,6 @@ public class FeedListAdapter extends BaseAdapter{//} implements OnMapReadyCallba
             httpURLConnection.disconnect();
         }
         return responseString;
-    }
-
-    public void updateFeedList(List<Item> feedItems){
-        this.feedItems.clear();
-        this.feedItems.addAll(feedItems);
-        notifyDataSetChanged();
     }
 
     public class TaskRequestDirections extends AsyncTask<Wrapper, Void, Wrapper> {
@@ -802,25 +718,7 @@ public class FeedListAdapter extends BaseAdapter{//} implements OnMapReadyCallba
                     TextView distancess = views.get(w.position).findViewById(R.id.distance);
                     distancess.setText(dist);
 
-                    /*View popUpView = inflater.inflate(R.layout.polyline_window, null);
-
-                    ((TextView)popUpView.findViewById(R.id.windowtime)).setText(duration);
-                    ((TextView)popUpView.findViewById(R.id.windowdistance)).setText(dist);
-
-                    int width = LinearLayout.LayoutParams.WRAP_CONTENT;
-                    int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-                    boolean focusable = true;
-                    final PopupWindow popupWindow = new PopupWindow(popUpView, width, height, focusable);
-
-                    popupWindow.showAtLocation(views.get(w.position),Gravity.CENTER, 0, 0);*/
-
-                    //length.setText(duration);
-                    //distance.setText(dist);
-
-                    //Log.e(TAG, "update "+w.position+" "+feedItems.get(w.position).getLength()+" "+feedItems.get(w.position).getDistance());
-
                     points.add(new LatLng(lat,lon));
-                    //notifyDataSetChanged();
                 }
 
                 polylineOptions.addAll(points);
@@ -834,7 +732,6 @@ public class FeedListAdapter extends BaseAdapter{//} implements OnMapReadyCallba
             } else {
                 Toast.makeText(activity.getApplicationContext(), "Direction not found!", Toast.LENGTH_SHORT).show();
             }
-            //updateFeedList(feedItems);
         }
     }
 }
