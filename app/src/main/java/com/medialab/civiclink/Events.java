@@ -1,5 +1,6 @@
 package com.medialab.civiclink;
 
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,9 +17,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -74,7 +81,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Events extends AppCompatActivity{// implements OnMapReadyCallback {
+public class Events extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{// implements OnMapReadyCallback {
     Button transport, new_event;
 
     TextView length, distance;
@@ -125,6 +132,8 @@ public class Events extends AppCompatActivity{// implements OnMapReadyCallback {
     private List<String> lengths = new ArrayList<>();
     private List<String> distances = new ArrayList<>();
 
+    SessionManagement session;
+
     private LocationListener mLocationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
@@ -166,6 +175,21 @@ public class Events extends AppCompatActivity{// implements OnMapReadyCallback {
         // Retrieve the content view that renders the map.
         setContentView(R.layout.activity_events);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setItemIconTintList(null);
+
+        session = new SessionManagement(getApplication());
+        session.checkLogin();
 
         Cache cache1 = new DiskBasedCache(getCacheDir(), 1024 * 1024);
 
@@ -264,4 +288,75 @@ public class Events extends AppCompatActivity{// implements OnMapReadyCallback {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        //getMenuInflater().inflate(R.menu.profile, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        /*if (id == R.id.action_settings) {
+            return true;
+        }*/
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+        if (id == R.id.nav_home_events) {
+            /*if(dorr.equals("donor")){
+                Toast.makeText(getApplicationContext(),"Welcome Donor",Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getApplicationContext(), WelcomeDonor.class));
+            }else
+                startActivity(new Intent(getApplicationContext(), WelcomeReceiver.class));*/
+            startActivity(new Intent(getApplicationContext(), Events.class));
+        } else if (id == R.id.nav_requests_events) {
+            /*Toast.makeText(getApplicationContext(),"Profile Receiver",Toast.LENGTH_SHORT).show();
+            if(dorr.equals("donor")){*/
+                Toast.makeText(getApplicationContext(),"Requests",Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(this, Requests.class);
+                /*Bundle bundle = new Bundle();
+                bundle.putString("username", username1);
+                i.putExtras(bundle);*/
+
+                startActivity(i);
+                //startActivity(new Intent(getApplicationContext(), ProfileDonor.class));
+            /*}else
+                startActivity(new Intent(getApplicationContext(), ProfileReceiver.class));*/
+        } else if (id == R.id.nav_groups_events){
+            //startActivity(new Intent(getApplicationContext(), LocationListView.class));
+        }
+        else if (id == R.id.nav_logout_events) {
+            session.logoutUser();
+        }
+
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
 }

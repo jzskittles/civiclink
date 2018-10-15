@@ -43,7 +43,7 @@ public class Transportation extends AppCompatActivity {
 
     SessionManagement session;
 
-    String name, email, eventID, eventAddress, phone;
+    String name, email, eventName, eventID, eventAddress, phone, eventDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,9 +84,13 @@ public class Transportation extends AppCompatActivity {
             if(extras == null){
                 eventID = null;
                 eventAddress = null;
+                eventName = null;
+                eventDate = null;
             }else{
                 eventID = extras.getString("eventID");
                 eventAddress = extras.getString("eventAddress");
+                eventName = extras.getString("eventName");
+                eventDate = extras.getString("eventDate");
             }
         }
 
@@ -199,13 +203,15 @@ public class Transportation extends AppCompatActivity {
                         hashMap.put("name",name);
                         hashMap.put("email",email);
                         hashMap.put("phone", phonenum);
+                        hashMap.put("eventName", eventName);
                         hashMap.put("eventID", eventID);
                         hashMap.put("eventAddress", eventAddress);
                         hashMap.put("dorr", dorr);
                         hashMap.put("times", timing);
+                        hashMap.put("date", eventDate);
                         hashMap.put("address", addresss);
                         hashMap.put("seats", seats);
-                        Log.e("WHAT", name+" "+ email+ " "+phonenum+" "+ eventID+" "+ eventAddress+" "+ dorr+" "+timing+" "+addresss+" "+seats);
+                        Log.e("WHAT", name+" "+ email+ " "+phonenum+" "+ eventName+" "+eventID+" "+ eventAddress+" "+ dorr+" "+timing+" "+eventDate+" "+addresss+" "+seats);
                         return hashMap;
                     }
                 };

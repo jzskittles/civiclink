@@ -231,6 +231,8 @@ public class FeedListAdapter extends BaseAdapter{//} implements OnMapReadyCallba
                         Bundle bundle = new Bundle();
                         bundle.putString("eventID", feedItems.get((Integer)transport.getTag()).getUid());
                         bundle.putString("eventAddress", feedItems.get((Integer)transport.getTag()).getAddress());
+                        bundle.putString("eventName", feedItems.get((Integer)transport.getTag()).getName());
+                        bundle.putString("eventDate", feedItems.get((Integer)transport.getTag()).getDate());
                         intent.putExtras(bundle);
                         mContext.startActivity(intent);
 
