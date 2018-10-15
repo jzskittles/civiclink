@@ -1,7 +1,17 @@
 package com.medialab.civiclink;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -20,11 +30,23 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.GeoDataClient;
+import com.google.android.gms.location.places.PlaceDetectionClient;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class Transportation extends AppCompatActivity {
@@ -33,6 +55,8 @@ public class Transportation extends AppCompatActivity {
 
     TextView fit, need, pickuptime, availabletime, departaddress, pickupaddress, totext;
     EditText numfit, numneed, time, start_time, end_time, address;
+
+    private static final String TAG = Transportation.class.getSimpleName();
 
     CheckBox currentlocation;
 
@@ -44,6 +68,59 @@ public class Transportation extends AppCompatActivity {
     SessionManagement session;
 
     String name, email, eventName, eventID, eventAddress, phone, eventDate;
+
+    // The entry points to the Places API.
+    private GeoDataClient mGeoDataClient;
+    private PlaceDetectionClient mPlaceDetectionClient;
+
+    // The entry point to the Fused Location Provider.
+    private FusedLocationProviderClient mFusedLocationProviderClient;
+
+    // A default location (Sydney, Australia) and default zoom to use when location permission is
+    // not granted.
+    private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
+    private static final int DEFAULT_ZOOM = 15;
+    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    private boolean mLocationPermissionGranted;
+
+    // The geographical location where the device is currently located. That is, the last-known
+    // location retrieved by the Fused Location Provider.
+    private Location mLastKnownLocation;
+
+    private LocationManager mLocationManager;
+
+
+    private LocationListener mLocationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            if(location != null){
+                //Log.d(TAG, String.format("%f, %f", location.getLatitude(), location.getLongitude()));
+                //drawMarker(location, "Current Location", 0);
+                mLocationManager.removeUpdates(mLocationListener);
+            }/*else{
+
+                //Log.d(TAG, "location is null");
+            }*/
+        }
+
+        @Override
+        public void onStatusChanged(String s, int i, Bundle bundle) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String s) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String s) {
+
+        }
+    };
+
+    Location loc=null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -218,5 +295,133 @@ public class Transportation extends AppCompatActivity {
                 requestQueue.add(request);
             }
         });
+
+        currentlocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Construct a GeoDataClient.
+
+                mGeoDataClient = Places.getGeoDataClient(Transportation.this, null);
+
+                // Construct a PlaceDetectionClient.
+                mPlaceDetectionClient = Places.getPlaceDetectionClient(Transportation.this, null);
+
+                // Construct a FusedLocationProviderClient.
+                mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(Transportation.this);
+
+                mLocationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+
+                // Prompt the user for permission.
+                getLocationPermission();
+
+                getDeviceLocation();
+            }
+        });
+    }
+
+    /**
+     * Prompts the user for permission to use the device location.
+     */
+    private void getLocationPermission() {
+        /*
+         * Request location permission, so that we can get the location of the
+         * device. The result of the permission request is handled by a callback,
+         * onRequestPermissionsResult.
+         */
+        if (ContextCompat.checkSelfPermission(getApplicationContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mLocationPermissionGranted = true;
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        }
+    }
+
+
+
+    private Location getDeviceLocation() {
+        /*
+         * Get the best and most recent location of the device, which may be null in rare
+         * cases when a location is not available.
+         */
+
+        try {
+            if (mLocationPermissionGranted) {
+                Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
+
+                locationResult.addOnCompleteListener(new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        boolean isGPSEnabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                        final boolean isNetworkEnabled = mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+                        Location location = null;
+                        if (task.isSuccessful()) {
+                            // Set the map's camera position to the current location of the device.
+                            mLastKnownLocation = task.getResult();
+                            if(mLastKnownLocation!=null){
+                                /*mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                                        new LatLng(mLastKnownLocation.getLatitude(),
+                                                mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));*/
+                                location = mLastKnownLocation;
+                                //drawMarker(location);
+                                Log.e(TAG, "last known location not null");
+                                //Toast.makeText(getApplicationContext(), "last known location not null", Toast.LENGTH_LONG).show();
+                            }else {
+                                if(isNetworkEnabled) {
+                                    mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 10, mLocationListener);
+                                    location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                                    Log.e(TAG, "Network Enabled "+location);
+                                    //Toast.makeText(getApplicationContext(), "Network Enabled "+location, Toast.LENGTH_LONG).show();
+                                }
+                                if(isGPSEnabled){
+                                    mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, mLocationListener);
+                                    location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                                    Log.e(TAG, "GPS Enabled "+location);
+                                    //Toast.makeText(getApplicationContext(), "GPS Enabled "+location, Toast.LENGTH_LONG).show();
+                                }
+                            }
+                            if(location!=null){
+                                Log.e(TAG, "Location found"+location.getLatitude()+" "+location.getLongitude());
+
+                                //Toast.makeText(getApplicationContext(), "location not null, draw marker", Toast.LENGTH_LONG).show();
+                                loc = location;
+
+                                Log.e(TAG, loc.getLatitude()+", "+loc.getLongitude());
+
+                                Geocoder geocoder;
+                                List<Address> addresses;
+                                geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+                                try {
+                                    addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                                    String addresss = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                                    String city = addresses.get(0).getLocality();
+                                    String state = addresses.get(0).getAdminArea();
+                                    String country = addresses.get(0).getCountryName();
+                                    String postalCode = addresses.get(0).getPostalCode();
+                                    String knownName = addresses.get(0).getFeatureName();// Only if available else return NULL
+                                    address.setText(addresss+" "+city+" "+state+" "+country+" "+postalCode);
+                                    Log.e(TAG, addresss+" "+city+" "+state+" "+country+" "+postalCode);
+                                }catch(IOException e){
+                                    Log.e("Exception: %s", e.getMessage());
+                                }
+                            }
+
+                        } else {
+                            Log.d(TAG, "Current location is null. Using defaults.");
+                            Log.e(TAG, "Exception: %s", task.getException());
+                            //Toast.makeText(getApplicationContext(), "current location", Toast.LENGTH_LONG).show();
+                            /*gMaps.get(position).moveCamera(CameraUpdateFactory
+                                    .newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
+                            gMaps.get(event_locations.size()-1).getUiSettings().setMyLocationButtonEnabled(false);*/
+                        }
+                    }
+                });
+            }
+        } catch (SecurityException e) {
+            Log.e("Exception: %s", e.getMessage());
+        }
+        return loc;
     }
 }

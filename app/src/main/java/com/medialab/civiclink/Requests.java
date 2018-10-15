@@ -1,8 +1,13 @@
 package com.medialab.civiclink;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
@@ -33,6 +38,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.GeoDataClient;
+import com.google.android.gms.location.places.PlaceDetectionClient;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,6 +63,7 @@ public class Requests extends AppCompatActivity implements NavigationView.OnNavi
     private RequestQueue requestQueue;
 
     private StringRequest request;
+    private static final String TAG = Requests.class.getSimpleName();
 
     private String URL = "";
     private String username, email, name;
@@ -68,6 +83,8 @@ public class Requests extends AppCompatActivity implements NavigationView.OnNavi
 
     private BaseAdapter simpleAdapterPending, simpleAdapterApproved, simpleAdapterDenied;
     private ArrayList<String> uids;
+
+
 
 
     @Override
@@ -123,7 +140,7 @@ public class Requests extends AppCompatActivity implements NavigationView.OnNavi
         view1 = new RelativeLayout(getApplicationContext());
         view2 = new RelativeLayout(getApplicationContext());
         view3 = new RelativeLayout(getApplicationContext());
-        
+
         simpleAdapterPending = new SimpleAdapter(this, pendingList,
                 R.layout.pending_list_items,
                 from, to);
@@ -186,6 +203,7 @@ public class Requests extends AppCompatActivity implements NavigationView.OnNavi
             }
         });
     }
+
 
     @Override
     public void onBackPressed() {
