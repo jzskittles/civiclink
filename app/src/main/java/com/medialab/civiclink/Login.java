@@ -32,11 +32,12 @@ public class Login extends AppCompatActivity {
     SessionManagement session;
     Button login, register, login_button, register_button;
     EditText name, phone, email, password, street, num_seats, email_login, password_login;
-    Spinner transportation, car;
+    Spinner transportation, car, groups;
     CheckBox driving;
 
     String transport="";
     String car_type = "";
+    String group = "";
 
     private RequestQueue requestQueue;
 
@@ -64,6 +65,7 @@ public class Login extends AppCompatActivity {
 
         transportation = (Spinner)findViewById(R.id.transportation);
         car = (Spinner)findViewById(R.id.car_type);
+        groups = (Spinner)findViewById(R.id.group);
 
         session = new SessionManagement(getApplication());
 
@@ -84,6 +86,7 @@ public class Login extends AppCompatActivity {
                 street.setVisibility(View.INVISIBLE);
                 num_seats.setVisibility(View.INVISIBLE);
                 transportation.setVisibility(View.INVISIBLE);
+                groups.setVisibility(View.INVISIBLE);
                 car.setVisibility(View.INVISIBLE);
                 driving.setVisibility(View.INVISIBLE);
             }
@@ -102,6 +105,7 @@ public class Login extends AppCompatActivity {
                 password.setVisibility(View.VISIBLE);
                 street.setVisibility(View.VISIBLE);
                 transportation.setVisibility(View.VISIBLE);
+                groups.setVisibility(View.VISIBLE);
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(Login.this,
                         android.R.layout.simple_spinner_item, textArray);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -148,6 +152,27 @@ public class Login extends AppCompatActivity {
                         // TODO Auto-generated method stub
                     }
                 });
+                String[] groupArray = {"Church", "School", "Bike club", "MIT", "Cult", "Create your own!"};
+
+                ArrayAdapter<String> groupAdapter = new ArrayAdapter<String>(Login.this,
+                        android.R.layout.simple_spinner_item, groupArray);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                groups.setAdapter(groupAdapter);
+                groups.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view,
+                                               int position, long id) {
+                        group = parent.getItemAtPosition(position).toString();
+                        if(parent.getItemAtPosition(position).toString().equals("Create your own!")){
+                            startActivity(new Intent(getApplicationContext(), CreateGroup.class));
+                        }
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        // TODO Auto-generated method stub
+                    }
+                });
             }
         });
 
@@ -178,13 +203,16 @@ public class Login extends AppCompatActivity {
                                 String cartype = "";
                                 if(jsonObject.getString("cartype")!=null)
                                     cartype = jsonObject.getString("cartype");
+                                String groups = "";
+                                if(jsonObject.getString("groups")!=null)
+                                    groups = jsonObject.getString("groups");
                                 int numseats = 0;
                                 if(jsonObject.getString("numseats")!=null)
                                     numseats = Integer.parseInt(jsonObject.getString("numseats"));
                                 String driving = "";
                                 if(jsonObject.getString("driving")!=null)
                                     jsonObject.getString("driving");
-                                session.createLoginSession(name, phone, email, password.getText().toString(), street, transportation, cartype, numseats, driving);
+                                session.createLoginSession(name, phone, email, password.getText().toString(), street, transportation, cartype, groups, numseats, driving);
                                 Toast.makeText(getApplicationContext(), email_login.getText().toString(), Toast.LENGTH_LONG).show();
                                 startActivity(new Intent(getApplicationContext(),Events.class));
                             }else{
@@ -252,6 +280,7 @@ public class Login extends AppCompatActivity {
                         hashMap.put("cartype",car_type);
                         if(num_seats.toString().equals(""))
                             num_seats.setText("0");
+                        hashMap.put("groups", group);
                         hashMap.put("numseats",num_seats.getText().toString());
                         if(driving.isChecked())
                             hashMap.put("driving", "True");

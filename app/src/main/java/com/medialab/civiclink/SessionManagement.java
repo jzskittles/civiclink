@@ -28,6 +28,7 @@ public class SessionManagement {
     public static final String KEY_STREET = "street";
     public static final String KEY_TRANSPORTATION = "transportation";
     public static final String KEY_CARTYPE = "cartype";
+    public static final String KEY_GROUPS = "groups";
     public static final String KEY_NUMSEATS = "numseats";
 
     public static final String KEY_DRIVING = "driving";
@@ -39,7 +40,7 @@ public class SessionManagement {
         editor = pref.edit();
     }
 
-    public void createLoginSession(String name, int phone, String email, String password, String street, String transportation, String cartype, int numseats, String driving) {
+    public void createLoginSession(String name, int phone, String email, String password, String street, String transportation, String cartype, String groups, int numseats, String driving) {
         editor.putBoolean(IS_LOGIN, true);
         editor.putString(KEY_NAME, name);
         editor.putString(KEY_PHONE, String.valueOf(phone));
@@ -48,6 +49,7 @@ public class SessionManagement {
         editor.putString(KEY_STREET, street);
         editor.putString(KEY_TRANSPORTATION, transportation);
         editor.putString(KEY_CARTYPE, cartype);
+        editor.putString(KEY_GROUPS, groups);
         editor.putString(KEY_NUMSEATS, String.valueOf(numseats));
         editor.putString(KEY_DRIVING, driving);
         editor.commit();
@@ -62,6 +64,7 @@ public class SessionManagement {
         user.put(KEY_STREET, pref.getString(KEY_STREET, "null"));
         user.put(KEY_TRANSPORTATION, pref.getString(KEY_TRANSPORTATION, "null"));
         user.put(KEY_CARTYPE, pref.getString(KEY_CARTYPE, "null"));
+        user.put(KEY_GROUPS, pref.getString(KEY_GROUPS, "null"));
         user.put(KEY_NUMSEATS, pref.getString(KEY_NUMSEATS, "null"));
         user.put(KEY_DRIVING, pref.getString(KEY_DRIVING, "null"));
         return user;

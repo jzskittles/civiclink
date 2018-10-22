@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:text="New Group"
+        android:textSize="28sp" />
+
+    <EditText
+        android:id="@+id/groupname"
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:hint="Group Name"
+        android:inputType="textCapWords"
+        android:textColor="@android:color/black"/>
+
+    <EditText
+        android:id="@+id/groupdetails"
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/groupname"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:hint="Group Details"
+        android:inputType="textMultiLine" />
+
+    <EditText
+        android:id="@+id/groupaddress"
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/groupdetails"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:hint="Address"
+        android:inputType="textPostalAddress" />
+
+    <Spinner
+        android:id="@+id/grouptype"
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/groupaddress"
+        android:layout_alignStart="@+id/groupname"
+        android:layout_marginStart="0dp"
+        android:visibility="visible" />
+
+    <EditText
+        android:id="@+id/newtype"
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/grouptype"
+        android:layout_alignStart="@+id/groupname"
+        android:ems="10"
+        android:hint="New Type"
+        android:inputType="text"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/pick_file"
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/newtype"
+        android:layout_alignStart="@+id/groupname"
+        android:layout_marginStart="0dp"
+        android:text="PICK CSV FILE" />
+
+    <Button
+        android:id="@+id/make_group"
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/pick_file"
+        android:layout_alignStart="@+id/groupname"
+        android:layout_marginTop="46dp"
+        android:text="SUBMIT" />
+
+
+
+
+</RelativeLayout>

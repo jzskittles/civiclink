@@ -87,85 +87,16 @@ public class Events extends AppCompatActivity implements NavigationView.OnNaviga
     TextView length, distance;
 
     private ListView listView;
-    private FeedListAdapter listAdapter, listAdapter2;
+    private FeedListAdapter listAdapter;
     private List<Item> feedItems;
 
     private RequestQueue requestQueue;
     private StringRequest request;
 
     private static final String TAG = Events.class.getSimpleName();
-    private GoogleMap mMap;
-    private CameraPosition mCameraPosition;
-
-    // The entry points to the Places API.
-    private GeoDataClient mGeoDataClient;
-    private PlaceDetectionClient mPlaceDetectionClient;
-
-    // The entry point to the Fused Location Provider.
-    private FusedLocationProviderClient mFusedLocationProviderClient;
-
-    // A default location (Sydney, Australia) and default zoom to use when location permission is
-    // not granted.x
-    private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
-    private static final int DEFAULT_ZOOM = 15;
-    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-    private boolean mLocationPermissionGranted;
-
-    // The geographical location where the device is currently located. That is, the last-known
-    // location retrieved by the Fused Location Provider.
-    private Location mLastKnownLocation;
-
-    // Keys for storing activity state.
-    private static final String KEY_CAMERA_POSITION = "camera_position";
-    private static final String KEY_LOCATION = "location";
-
-    // Used for selecting the current place.
-    private static final int M_MAX_ENTRIES = 5;
-    private String[] mLikelyPlaceNames;
-    private String[] mLikelyPlaceAddresses;
-    private String[] mLikelyPlaceAttributions;
-    private LatLng[] mLikelyPlaceLatLngs;
-
-    private List<Location> event_locations;
-    private List<Marker> event_markers;
-    private List<PolylineOptions> poly = new ArrayList<>();
-    private List<String> lengths = new ArrayList<>();
-    private List<String> distances = new ArrayList<>();
 
     SessionManagement session;
 
-    private LocationListener mLocationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(Location location) {
-            if(location != null){
-                Log.d(TAG, String.format("%f, %f", location.getLatitude(), location.getLongitude()));
-                //drawMarker(location, "Current Location");
-                mLocationManager.removeUpdates(mLocationListener);
-            }else{
-                Log.d(TAG, "location is null");
-            }
-        }
-
-        @Override
-        public void onStatusChanged(String s, int i, Bundle bundle) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String s) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String s) {
-
-        }
-    };
-
-    private LocationManager mLocationManager;
-
-    List<Address> event_addresses;
-    List<String> event_strings;
     private String URL_FEED = "https://civiclink.000webhostapp.com/status.json";
 
     @Override
@@ -204,9 +135,8 @@ public class Events extends AppCompatActivity implements NavigationView.OnNaviga
         feedItems = new ArrayList<Item>();
 
         getFeed();
-        Log.e(TAG, "number of items after getFeed"+feedItems.size());
-        listAdapter = new FeedListAdapter(getApplicationContext(), this, feedItems);
-        listView.setAdapter(listAdapter);
+        //Log.e(TAG, "number of items after getFeed"+feedItems.size());
+
 
         new_event = (Button)findViewById(R.id.new_event);
 
@@ -282,8 +212,12 @@ public class Events extends AppCompatActivity implements NavigationView.OnNaviga
                 feedItems.add(item);
 
                 // notify data changes to list adapter
-                listAdapter.notifyDataSetChanged();
+                //listAdapter.notifyDataSetChanged();
             }
+
+            listAdapter = new FeedListAdapter(getApplicationContext(), this, feedItems);
+            Log.e(TAG, ""+feedItems.size());
+            listView.setAdapter(listAdapter);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -292,7 +226,7 @@ public class Events extends AppCompatActivity implements NavigationView.OnNaviga
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
+        if (drawer.isDrawerOpen(GravityCompat.START)){
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
@@ -301,7 +235,7 @@ public class Events extends AppCompatActivity implements NavigationView.OnNaviga
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        //Inflate the menu; this adds items to the action bar if it is present.
         //getMenuInflater().inflate(R.menu.profile, menu);
         return true;
     }

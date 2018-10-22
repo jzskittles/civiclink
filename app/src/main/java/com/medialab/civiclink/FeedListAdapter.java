@@ -179,118 +179,120 @@ public class FeedListAdapter extends BaseAdapter{//} implements OnMapReadyCallba
         if (convertView == null) {
             try {
                 convertView = inflater.inflate(R.layout.event_layout, null);
-                Item item = feedItems.get(position);
 
-                //RelativeLayout rl = convertView.findViewById(R.id.times);
-
-                name = (TextView) convertView.findViewById(R.id.name);
-                date = (TextView) convertView.findViewById(R.id.date);
-                time = (TextView) convertView.findViewById(R.id.time);
-                length = (TextView) convertView.findViewById(R.id.length);
-
-                //RelativeLayout rl2 = convertView.findViewById(R.id.event_detail);
-                details = (TextView) convertView.findViewById(R.id.details);
-                distance = (TextView) convertView.findViewById(R.id.distance);
-
-                //RelativeLayout rl3 = convertView.findViewById(R.id.mapss);
-                address = (TextView) convertView.findViewById(R.id.address);
-
-                name.setText(item.getName());
-                date.setText(item.getDate());
-                time.setText(item.getTime());
-                details.setText(item.getDetails());
-                address.setText(item.getAddress());
-                length.setText(item.getLength());
-                distance.setText(item.getDistance());
-                uid = item.getUid();
-
-                final String mapdest = item.getAddress();
-
-                // Construct a GeoDataClient.
-                mGeoDataClient = Places.getGeoDataClient(activity, null);
-
-                // Construct a PlaceDetectionClient.
-                mPlaceDetectionClient = Places.getPlaceDetectionClient(activity, null);
-
-                // Construct a FusedLocationProviderClient.
-                mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity);
-
-                mLocationManager = (LocationManager)activity.getSystemService(Context.LOCATION_SERVICE);
-                event_locations = new ArrayList<>();
-                event_markers = new ArrayList<>();
-
-                final Button transport = (Button)convertView.findViewById(R.id.transport);
-                transport.setTag(position);
-
-                transport.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View arg0) {
-                        // Get the position
-                        Intent intent = new Intent(mContext, Transportation.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putString("eventID", feedItems.get((Integer)transport.getTag()).getUid());
-                        bundle.putString("eventAddress", feedItems.get((Integer)transport.getTag()).getAddress());
-                        bundle.putString("eventName", feedItems.get((Integer)transport.getTag()).getName());
-                        bundle.putString("eventDate", feedItems.get((Integer)transport.getTag()).getDate());
-                        intent.putExtras(bundle);
-                        mContext.startActivity(intent);
-
-                    }
-                });
-
-                // Build the map.
-                mapView = (MapView)convertView.findViewById(R.id.mapView);
-                mapView.onCreate(null);
-                mapView.getMapAsync(new OnMapReadyCallback() {
-                    @Override
-                    public void onMapReady(GoogleMap googleMap) {
-                        gMaps.add(googleMap);
-
-                        //event_locations.clear();
-
-                        // Use a custom info window adapter to handle multiple lines of text in the
-                        // info window contents.
-                        gMaps.get(position).setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-
-                            @Override
-                            // Return null here, so that getInfoContents() is called next.
-                            public View getInfoWindow(Marker arg0) {
-                                return null;
-                            }
-
-                            @Override
-                            public View getInfoContents(Marker marker) {
-                                // Inflate the layouts for the info window, title and snippet.
-                                View infoWindow = activity.getLayoutInflater().inflate(R.layout.custom_info_contents,
-                                        (FrameLayout) activity.findViewById(R.id.mapView), false);
-
-                                TextView title = ((TextView) infoWindow.findViewById(R.id.title));
-                                title.setText(marker.getTitle());
-
-                                TextView snippet = ((TextView) infoWindow.findViewById(R.id.snippet));
-                                snippet.setText(marker.getSnippet());
-
-                                return infoWindow;
-                            }
-                        });
-
-                        // Prompt the user for permission.
-                        getLocationPermission();
-
-                        // Turn on the My Location layer and the related control on the map.
-                        updateLocationUI();
-
-                        // Get the current location of the device and set the position of the map.
-                        Log.e(TAG, "async "+mapdest+" "+position);
-                        getDeviceLocation(mapdest, position);
-                    }
-                });
-                mapView.onResume();
             }catch(InflateException e){
 
             }
         }
+
+        Item item = feedItems.get(position);
+
+        //RelativeLayout rl = convertView.findViewById(R.id.times);
+
+        name = (TextView) convertView.findViewById(R.id.name);
+        date = (TextView) convertView.findViewById(R.id.date);
+        time = (TextView) convertView.findViewById(R.id.time);
+        length = (TextView) convertView.findViewById(R.id.length);
+
+        //RelativeLayout rl2 = convertView.findViewById(R.id.event_detail);
+        details = (TextView) convertView.findViewById(R.id.details);
+        distance = (TextView) convertView.findViewById(R.id.distance);
+
+        //RelativeLayout rl3 = convertView.findViewById(R.id.mapss);
+        address = (TextView) convertView.findViewById(R.id.address);
+
+        name.setText(item.getName());
+        date.setText(item.getDate());
+        time.setText(item.getTime());
+        details.setText(item.getDetails());
+        address.setText(item.getAddress());
+        length.setText(item.getLength());
+        distance.setText(item.getDistance());
+        uid = item.getUid();
+
+        final String mapdest = item.getAddress();
+
+        // Construct a GeoDataClient.
+        mGeoDataClient = Places.getGeoDataClient(activity, null);
+
+        // Construct a PlaceDetectionClient.
+        mPlaceDetectionClient = Places.getPlaceDetectionClient(activity, null);
+
+        // Construct a FusedLocationProviderClient.
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity);
+
+        mLocationManager = (LocationManager)activity.getSystemService(Context.LOCATION_SERVICE);
+        event_locations = new ArrayList<>();
+        event_markers = new ArrayList<>();
+
+        final Button transport = (Button)convertView.findViewById(R.id.transport);
+        transport.setTag(position);
+
+        transport.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                // Get the position
+                Intent intent = new Intent(mContext, Transportation.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("eventID", feedItems.get((Integer)transport.getTag()).getUid());
+                bundle.putString("eventAddress", feedItems.get((Integer)transport.getTag()).getAddress());
+                bundle.putString("eventName", feedItems.get((Integer)transport.getTag()).getName());
+                bundle.putString("eventDate", feedItems.get((Integer)transport.getTag()).getDate());
+                intent.putExtras(bundle);
+                mContext.startActivity(intent);
+
+            }
+        });
+
+        // Build the map.
+        mapView = (MapView)convertView.findViewById(R.id.mapView);
+        mapView.onCreate(null);
+        mapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                gMaps.add(googleMap);
+
+                //event_locations.clear();
+
+                // Use a custom info window adapter to handle multiple lines of text in the
+                // info window contents.
+                gMaps.get(position).setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+                    @Override
+                    // Return null here, so that getInfoContents() is called next.
+                    public View getInfoWindow(Marker arg0) {
+                        return null;
+                    }
+
+                    @Override
+                    public View getInfoContents(Marker marker) {
+                        // Inflate the layouts for the info window, title and snippet.
+                        View infoWindow = activity.getLayoutInflater().inflate(R.layout.custom_info_contents,
+                                (FrameLayout) activity.findViewById(R.id.mapView), false);
+
+                        TextView title = ((TextView) infoWindow.findViewById(R.id.title));
+                        title.setText(marker.getTitle());
+
+                        TextView snippet = ((TextView) infoWindow.findViewById(R.id.snippet));
+                        snippet.setText(marker.getSnippet());
+
+                        return infoWindow;
+                    }
+                });
+
+                // Prompt the user for permission.
+                getLocationPermission();
+
+                // Turn on the My Location layer and the related control on the map.
+                updateLocationUI();
+
+                // Get the current location of the device and set the position of the map.
+                Log.e(TAG, "async "+mapdest+" "+position);
+                getDeviceLocation(mapdest, position);
+            }
+        });
+        mapView.onResume();
 
         views.add(convertView);
 
