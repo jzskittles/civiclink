@@ -281,7 +281,7 @@ public class Events extends AppCompatActivity implements NavigationView.OnNaviga
             /*}else
                 startActivity(new Intent(getApplicationContext(), ProfileReceiver.class));*/
         } else if (id == R.id.nav_groups_events){
-            //startActivity(new Intent(getApplicationContext(), LocationListView.class));
+            startActivity(new Intent(getApplicationContext(), Groups.class));
         }
         else if (id == R.id.nav_logout_events) {
             session.logoutUser();

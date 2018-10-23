@@ -67,6 +67,11 @@
             android:label="CreateGroup"
             android:theme="@style/AppTheme" />
 
+        <activity
+            android:name=".Groups"
+            android:label="Groups"
+            android:theme="@style/AppTheme" />
+
 
     </application>
 

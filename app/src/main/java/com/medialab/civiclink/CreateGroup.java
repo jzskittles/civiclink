@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -37,6 +38,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class CreateGroup extends AppCompatActivity {
 
@@ -55,6 +57,8 @@ public class CreateGroup extends AppCompatActivity {
     Spinner groupType;
     String groupt="";
     EditText others;
+
+    RadioButton open, closed;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +88,9 @@ public class CreateGroup extends AppCompatActivity {
         groupType = (Spinner)findViewById(R.id.grouptype);
 
         requestQueue = Volley.newRequestQueue(this);
+
+        open = (RadioButton)findViewById(R.id.open);
+        closed = (RadioButton)findViewById(R.id.closed);
 
         String[] groupArray = {"Church", "School", "Bike club", "MIT", "Cult", "Other"};
 
@@ -147,7 +154,15 @@ public class CreateGroup extends AppCompatActivity {
                             hashMap.put("grouptype",others.getText().toString());
                         else
                             hashMap.put("grouptype", groupt);
-                        hashMap.put("groupmembers",groupmembers.substring(0,groupmembers.length()-2));
+                        if(open.isChecked()){
+                            hashMap.put("permissions", "open");
+                            hashMap.put("code", "");
+                        }else{
+                            hashMap.put("permissions", "closed");
+                            int rand = new Random().nextInt(9000)+1000;
+                            hashMap.put("code",""+rand);
+                        }
+                        hashMap.put("groupmembers", groupmembers.substring(0,groupmembers.length()-2));
                         hashMap.put("admin",host);
                         Log.e("CreateGroup", groupname.getText().toString()+" "+groupdetails.getText().toString()+" "+groupaddress.getText().toString()+" "+groupt+" "+groupmembers+" "+host);
                         return hashMap;
