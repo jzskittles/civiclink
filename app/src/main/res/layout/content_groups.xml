@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.medialab.civiclink.Groups">
+
+    <RelativeLayout
+        android:id="@+id/titlerelative"
+        android:layout_marginTop="120dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/event_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" Groups"
+            android:textColor="@android:color/black"
+            android:textSize="36sp" />
+
+        <Button
+            android:id="@+id/new_group"
+            android:layout_width="49dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="0dp"
+            android:text="+" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/yourGroups"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/titlerelative"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="0dp"
+        android:text="Your Groups"
+        android:textAppearance="@android:style/TextAppearance.Large" />
+    <GridView
+        android:id="@+id/yourGrid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/yourGroups"
+        android:gravity="center"
+        android:numColumns="4" />
+
+    <TextView
+        android:id="@+id/allGroups"
+        android:text="All Groups"
+        android:layout_below="@+id/yourGrid"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@android:style/TextAppearance.Large"/>
+
+    <GridView
+        android:id="@+id/mainGrid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/allGroups"
+        android:gravity="center"
+        android:numColumns="4" />
+
+    <TextView
+        android:id="@+id/totalGroups"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/titlerelative"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="0dp"
+        android:text="Total Groups"
+        android:visibility="gone"
+        android:textAppearance="@android:style/TextAppearance.Large" />
+
+    <GridView
+        android:id="@+id/totalGrid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/totalGroups"
+        android:gravity="center"
+        android:numColumns="4"
+        android:visibility="gone"/>
+
+</RelativeLayout>
