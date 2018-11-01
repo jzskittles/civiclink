@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/profilename"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="12dp"
+        android:text="Group Name"
+        android:textColor="@android:color/black"
+        android:textSize="36sp" />
+
+    <TextView
+        android:id="@+id/profiledetails"
+        android:layout_width="386dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profilename"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="12dp"
+        android:text="Group Details"
+        android:textColor="@android:color/black"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/titleaddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profiledetails"
+        android:layout_alignStart="@+id/profilename"
+        android:text="Address: "
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/profileaddress"
+        android:layout_width="311dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profiledetails"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="88dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="12dp"
+        android:text="Group Address"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/titletype"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profileaddress"
+        android:layout_alignStart="@+id/profilename"
+        android:text="Type: "
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/profiletype"
+        android:layout_width="341dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profileaddress"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="58dp"
+        android:layout_marginTop="-1dp"
+        android:layout_marginEnd="12dp"
+        android:text="Group Type"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/titleadmin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profileaddress"
+        android:layout_alignStart="@+id/profilename"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="23dp"
+        android:text="Admin: "
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/profileadmin"
+        android:layout_width="327dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profiletype"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="72dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="12dp"
+        android:text="Group Admin"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/joingroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profileadmin"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="12dp"
+        android:textColor="@android:color/black"
+        android:text="Join Group" />
+
+    <TextView
+        android:id="@+id/titlemembers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="12dp"
+        android:layout_below="@+id/joingroup"
+        android:text="Group Members"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
+
+    <ListView
+        android:id="@+id/profilemembers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/titlemembers"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="12dp"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
+
+
+</RelativeLayout>

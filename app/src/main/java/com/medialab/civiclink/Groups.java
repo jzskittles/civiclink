@@ -58,6 +58,31 @@ public class Groups extends AppCompatActivity implements NavigationView.OnNaviga
     ArrayList<String> web2 = new ArrayList<>();
     ArrayList<String> webtotal = new ArrayList<>();
 
+    ArrayList<String> groupname = new ArrayList<>();
+    ArrayList<String> groupdetails = new ArrayList<>();
+    ArrayList<String> groupaddress = new ArrayList<>();
+    ArrayList<String> grouptype = new ArrayList<>();
+    ArrayList<String> groupmembers = new ArrayList<>();
+    ArrayList<String> groupadmin = new ArrayList<>();
+    ArrayList<String> groupcode = new ArrayList<>();
+
+    ArrayList<String> groupname2 = new ArrayList<>();
+    ArrayList<String> groupdetails2 = new ArrayList<>();
+    ArrayList<String> groupaddress2 = new ArrayList<>();
+    ArrayList<String> grouptype2 = new ArrayList<>();
+    ArrayList<String> groupmembers2 = new ArrayList<>();
+    ArrayList<String> groupadmin2 = new ArrayList<>();
+    ArrayList<String> groupcode2 = new ArrayList<>();
+
+    ArrayList<String> groupnametot = new ArrayList<>();
+    ArrayList<String> groupdetailstot = new ArrayList<>();
+    ArrayList<String> groupaddresstot = new ArrayList<>();
+    ArrayList<String> grouptypetot = new ArrayList<>();
+    ArrayList<String> groupmemberstot = new ArrayList<>();
+    ArrayList<String> groupadmintot = new ArrayList<>();
+    ArrayList<String> groupcodetot = new ArrayList<>();
+    ArrayList<String> ingroup = new ArrayList<>();
+
 
     Button new_group, join_group;
 
@@ -125,8 +150,8 @@ public class Groups extends AppCompatActivity implements NavigationView.OnNaviga
                         for(int i = 0; i < length; i++) {
                             JSONObject row = jsonObject.getJSONObject(i+"");
 
-                            String ingroups = row.getString("groups");
-                            String [] temp;
+                            String ingroups = row.getString("groupname");
+                            /*String [] temp;
                             if(ingroups.contains(",")){
                                 temp = ingroups.split(",");
                             }else{
@@ -139,7 +164,25 @@ public class Groups extends AppCompatActivity implements NavigationView.OnNaviga
                             }
 
                             Log.e("GROUPS", ingroups);
-                            Log.e("GROUPS", web.get(0));
+                            Log.e("GROUPS", web.get(0));*/
+
+                            groupname.add(row.getString("groupname"));
+                            groupdetails.add(row.getString("groupdetails"));
+                            groupaddress.add(row.getString("groupaddress"));
+                            grouptype.add(row.getString("grouptype"));
+                            groupmembers.add(row.getString("groupmembers"));
+                            groupcode.add(row.getString("code"));
+                            groupadmin.add(row.getString("admin"));
+                            groupnametot.add(row.getString("groupname"));
+                            groupdetailstot.add(row.getString("groupdetails"));
+                            groupaddresstot.add(row.getString("groupaddress"));
+                            grouptypetot.add(row.getString("grouptype"));
+                            groupmemberstot.add(row.getString("groupmembers"));
+                            groupcodetot.add(row.getString("code"));
+                            groupadmintot.add(row.getString("admin"));
+                            ingroup.add("yes");
+                            web.add(row.getString("groupname"));
+                            webtotal.add(row.getString("groupname"));
 
                             int[] imageId = new int[web.size()];
                             for(int j=0;j<imageId.length;j++) {
@@ -153,8 +196,19 @@ public class Groups extends AppCompatActivity implements NavigationView.OnNaviga
                                 @Override
                                 public void onItemClick(AdapterView<?> parent, View view,
                                                         int position, long id) {
-                                    Toast.makeText(getApplicationContext(), "You Clicked at " +position, Toast.LENGTH_SHORT).show();
-
+                                    //Toast.makeText(getApplicationContext(), "You Clicked at " +position, Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(getApplicationContext(), GroupProfile.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("groupname", groupname.get(position));
+                                    bundle.putString("groupdetails", groupdetails.get(position));
+                                    bundle.putString("groupaddress", groupaddress.get(position));
+                                    bundle.putString("grouptype", grouptype.get(position));
+                                    bundle.putString("groupmembers", groupmembers.get(position));
+                                    bundle.putString("groupadmin", groupadmin.get(position));
+                                    bundle.putString("groupcode", groupcode.get(position));
+                                    bundle.putString("ingroup", "yes");
+                                    intent.putExtras(bundle);
+                                    startActivity(intent);
                                 }
                             });
 
@@ -193,15 +247,23 @@ public class Groups extends AppCompatActivity implements NavigationView.OnNaviga
                         for(int i = 0; i < length-1; i++) {
                             JSONObject row = jsonObject.getJSONObject(i+"");
 
-                            String groupname = row.getString("groupname");
-                            String groupdetails = row.getString("groupdetails");
-                            String address = row.getString("groupaddress");
-                            String grouptype = row.getString("grouptype");
-                            String groupmembers = row.getString("groupmembers");
-                            String code = row.getString("code");
-                            String admin = row.getString("admin");
-                            web2.add(groupname);
-                            webtotal.add(groupname);
+                            groupname2.add(row.getString("groupname"));
+                            groupdetails2.add(row.getString("groupdetails"));
+                            groupaddress2.add(row.getString("groupaddress"));
+                            grouptype2.add(row.getString("grouptype"));
+                            groupmembers2.add(row.getString("groupmembers"));
+                            groupcode2.add(row.getString("code"));
+                            groupadmin2.add(row.getString("admin"));
+                            groupnametot.add(row.getString("groupname"));
+                            groupdetailstot.add(row.getString("groupdetails"));
+                            groupaddresstot.add(row.getString("groupaddress"));
+                            grouptypetot.add(row.getString("grouptype"));
+                            groupmemberstot.add(row.getString("groupmembers"));
+                            groupcodetot.add(row.getString("code"));
+                            groupadmintot.add(row.getString("admin"));
+                            ingroup.add("no");
+                            web2.add(row.getString("groupname"));
+                            webtotal.add(row.getString("groupname"));
 
                             Log.e("GROUPS", web2.get(0));
 
@@ -217,8 +279,19 @@ public class Groups extends AppCompatActivity implements NavigationView.OnNaviga
                                 @Override
                                 public void onItemClick(AdapterView<?> parent, View view,
                                                         int position, long id) {
-                                    Toast.makeText(getApplicationContext(), "You Clicked at " +position, Toast.LENGTH_SHORT).show();
-
+                                    //Toast.makeText(getApplicationContext(), "You Clicked at " +position, Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(getApplicationContext(), GroupProfile.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("groupname", groupname2.get(position));
+                                    bundle.putString("groupdetails", groupdetails2.get(position));
+                                    bundle.putString("groupaddress", groupaddress2.get(position));
+                                    bundle.putString("grouptype", grouptype2.get(position));
+                                    bundle.putString("groupmembers", groupmembers2.get(position));
+                                    bundle.putString("groupadmin", groupadmin2.get(position));
+                                    bundle.putString("groupcode", groupcode2.get(position));
+                                    bundle.putString("ingroup", "no");
+                                    intent.putExtras(bundle);
+                                    startActivity(intent);
                                 }
                             });
 
@@ -245,25 +318,13 @@ public class Groups extends AppCompatActivity implements NavigationView.OnNaviga
 
         requestQueue.add(request2);
 
-        //final ArrayList<String> webtotal = new ArrayList<>();
-
         final List<String> grouplist = new ArrayList<>();
 
         for(int x=0;x<web.size();x++){
             grouplist.add(web.get(x));
-            //webtotal.add(web.get(x));
         }
         for(int x=0;x<web2.size();x++){
             grouplist.add(web2.get(x));
-            //webtotal.add(web2.get(x));
-        }
-
-        //webtotal.addAll(web);
-        //webtotal.addAll(web2);
-        //Log.e("NUMBER", webtotal.size()+"");
-
-        for(int x=0;x<webtotal.size();x++){
-            Log.e("GROUPS ??", webtotal.get(x));
         }
 
         int[] imageIdtotal = new int[webtotal.size()];
@@ -273,6 +334,26 @@ public class Groups extends AppCompatActivity implements NavigationView.OnNaviga
 
         adaptertotal = new GroupAdapter(getApplicationContext(), webtotal, imageIdtotal);
         totalGrid.setAdapter(adaptertotal);
+        totalGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                //Toast.makeText(getApplicationContext(), "You Clicked at " +position, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), GroupProfile.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("groupname", groupnametot.get(position));
+                bundle.putString("groupdetails", groupdetailstot.get(position));
+                bundle.putString("groupaddress", groupaddresstot.get(position));
+                bundle.putString("grouptype", grouptypetot.get(position));
+                bundle.putString("groupmembers", groupmemberstot.get(position));
+                bundle.putString("groupadmin", groupadmintot.get(position));
+                bundle.putString("groupcode", groupcodetot.get(position));
+                bundle.putString("ingroup", ingroup.get(position));
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
 
         //TEXT CHANGE LISTENER
         searchBar.addTextChangeListener(new TextWatcher() {
